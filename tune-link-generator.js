@@ -18,45 +18,48 @@ function createTuneDynamicDeepLink () {
 	// Add Your Tune Advertiser Id to the link ('your_advertiser_id')
 	if (your_advertiser_id.length>0) {
 		var link = link + your_advertiser_id;
-	} else { window.alert('Your Tune Advertiser ID is not filled in or is incorrect.');}
+	} else { window.alert('Your Tune Advertiser ID is not filled in or is incorrect.');
+		return}
 
 	// Add Tune main string identifiers
 	var link = link + '.measure.mobileapptracking.com/serve?sdk=server&response_format=json&ios_ifa={{device.hardware_id}}&google_aid={{device.metadata.google_advertising_id}}&created_at={{event.date}}&user_id={{identity}}&timestamp={{event.date}}&ios_ad_tracking_disabled=0&google_ad_tracking=1'
 
 	// Add Tune Site Id (site_id)
 	if (site_id.length>0) {
-		var link = link + '&site-ID=' + site_id;
-	} else { window.alert('Your Tune Site Id is not filled in or is incorrect.');}
+		var link = link + '&site_id=' + site_id;
+	} else { window.alert('Your Tune Site Id is not filled in or is incorrect.');
+		return}
 
 	// Add Tune Advertiser Id (advertiser_id)
 	if (advertiser_id.length>0) {
 		var link = link + '&advertiser_id=' + advertiser_id;
-	} else { window.alert('Your Tune Advertiser Id is not filled in or is incorrect.');}
+	} else { window.alert('Your Tune Advertiser Id is not filled in or is incorrect.');
+		return }
 
 	// Verify single Event Postback
-	if (action.length>0) 
+	if ( action.length>0 && (site_event_id.length>0 || site_event_name.length>0) ) || ( site_event_id.length>0 && (action.length>0 || site_event_name.length>0) ) || ( site_event_name.length>0 && (action.length>0 || site_event_id.length>0) ) {
+			window.alert('Only ONE event per postback URL is allowed! Please adjust your settings to include either a Tune Pre-defined Event Name, a Tune Site Event Id, or a Tune Custom Event Id.')
+			return
+		};
 
 	// Add Tune Predefined Event Name (action)
-
-
+	if (action.length>0) {
+		var link = link + '&action=' + action;
+	} else { window.alert('Your Pre-defined Event Name is not filled in or is incorrect.');
+		return }
 
 	// Add Tune Site Event Id (site_event_id)
-
-
+	if (site_event_id.length>0) {
+		var link = link + '&action=conversion&site_event_id=' + site_event_id
+		;
+	} else { window.alert('Your Pre-defined Event Name is not filled in or is incorrect.');
+		return }
 
 	// Add Tune Custom Event Id (site_event_name)
-
-
-
-,IF(ISBLANK(B6),"",CONCATENATE("&site-ID=",B6)),
-IF(ISBLANK(B7),"",CONCATENATE("&advertiser_id=",B7)),
-IF(ISBLANK(B8),"",CONCATENATE("&action=",B8)),
-IF(ISBLANK(B9),"",CONCATENATE("&action=conversion&site_event_id=",B9)),
-IF(ISBLANK(B10),"",CONCATENATE("&action=conversion&site_event_name=",B10)),
-
-	if (customQueryParams1.length > 0) {
-		var link = link +'&'+ customQueryParams1;}
-
+	if (site_event_name.length>0) {
+		var link = link + '&action=conversion&site_event_name=' + site_event_name;
+	} else { window.alert('Your Pre-defined Event Name is not filled in or is incorrect.');
+		return }
 
 	// Add Custom Query Parameters
 
@@ -96,3 +99,4 @@ IF(ISBLANK(B10),"",CONCATENATE("&action=conversion&site_event_name=",B10)),
 	window.document.getElementById('generatedTuneDyanmicDeepLink').value = link
 
 };
+
